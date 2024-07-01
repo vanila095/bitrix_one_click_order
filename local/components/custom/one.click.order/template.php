@@ -1,0 +1,51 @@
+<form id="form" >
+  <p>
+	<label for="name">Введите имя:</label>
+	<input type="text" name="name" id="name" required>
+  </p>
+  <p>
+	  <label for="email">Введите телефон:</label>
+	  <input type="tel" name="tel" id="tel" required>
+	</p>
+  <p>
+	<label for="email">Введите email:</label>
+	<input type="email" name="email" id="email" >
+  </p>
+  <button type="submit">Отправить</button>
+</form>
+
+<div id="result"></div>
+
+
+<script>
+
+$("#form").on("submit", function(){
+	
+	var name   = $('#name').val();
+	var tel    = $('#tel').val();
+	var email = $('#email').val();
+
+	var request = BX.ajax.runComponentAction('custom:one.click.order', 'test', {
+		mode: 'ajax',
+		data: {
+			name: name,
+			tel: tel,
+			email: email,
+			sessid: BX.message('bitrix_sessid')
+		}
+	});
+	
+	request.then(function (response) {
+		console.log(response.data);
+		
+		$('#result').html('Все ок');
+		
+	});
+	return false;
+
+});
+
+
+
+
+</script>
