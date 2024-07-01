@@ -1,0 +1,49 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+    - "8086:80"
+    networks:
+      - internal
+    volumes:
+      - ./:/var/www/app
+  fpm:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./:/var/www/app
+    networks:
+      - internal
+  mysql:
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./:/var/www/app
+    networks:
+      - internal
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    networks:
+    - internal
+    depends_on:
+    - mysql
+networks:
+  internal:
